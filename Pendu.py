@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
-mot="éponge"
+import csv 
+import random
+"""Lecture de la table de donnée qui pioche un mot de la liste au hazard"""
+Ouverture = open("Test1.csv")
+FichierCSV = csv.reader(Ouverture)
+listeX = []
+listeXstr = ""
+for ligne in FichierCSV:
+    x = ligne[random.randint(0,len(ligne))]
+    mot = "".join(x)
+
 nbre_coups_max = 2  # Nombre de coups max et en cours de jeu
 nbre_coups = 0
 liste_mot_bis = [] #Liste du mot caché au file du jeu
@@ -46,12 +56,18 @@ def lettre_mot(lettre):
             NumberLettre = i
             Mot_encours(lettre)
             print(mot_bis)
-            print("Les lettres déjà jouées:",deja_joue(lettre))
+            if lettre in stockSTR:
+                print("Vous avez déjà joué cette lettre !\n","Lettres déjà jouées :",stockSTR)
+            else:
+                print("Les lettre déjà jouées:", deja_joue(lettre))
             Lettre_bonne = True
             return True
     Lettre_bonne = False
     print(mot_bis)
-    print("Les lettres déjà jouées:",deja_joue(lettre))
+    if lettre in stockSTR:
+        print("Vous avez déjà joué cette lettre !\n","Lettres déjà jouées :",stockSTR)
+    else:
+        print("Les lettre déjà jouées:", deja_joue(lettre))
     return False
 
 """Boucle prncipale qui permet d'arreter le programe dans le cas ou le nombre de coups max est dépassé"""
@@ -64,3 +80,5 @@ while nbre_coups < nbre_coups_max :
         break
 if nbre_coups_max == nbre_coups:
     print("\n"+str("You lost"))
+
+    """Ajouter un try expect pour les lettres déjà jouées et modifier le mot fixe d'entrer en input"""
