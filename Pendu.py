@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv 
 import random
-"""Lecture de la table de donnée qui pioche un mot de la liste au hazard"""
+"""Lecture de la table de donnée qui pioche un mot de la liste au hasard"""
 Ouverture = open("Test1.csv")
 FichierCSV = csv.reader(Ouverture)
 listeX = []
