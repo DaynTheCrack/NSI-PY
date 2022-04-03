@@ -4,7 +4,7 @@ import os
 def clear(): # création d'une fonction clear
     os.system("cls")
 nbr_try = 8 # nombre d'essaies maximum
-already_use_letter = [] # liste qui contienr les lettres utilisées
+already_use_letter = [] # liste qui contient les lettres utilisées
 
 liste_mots = [ # liste des mots
     "poisson",
