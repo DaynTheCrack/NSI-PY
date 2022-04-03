@@ -1,84 +1,58 @@
-# -*- coding: utf-8 -*-
-import csv 
+"""Programme du Pendu python voir chap #17 python OpenClassRoom"""
 import random
-"""Lecture de la table de donnée qui pioche un mot de la liste au hasard"""
-Ouverture = open("Test1.csv")
-FichierCSV = csv.reader(Ouverture)
-listeX = []
-listeXstr = ""
-for ligne in FichierCSV:
-    x = ligne[random.randint(0,len(ligne))]
-    mot = "".join(x)
+import os
+def clear(): # création d'une fonction clear
+    os.system("cls")
+nbr_try = 8 # nombre d'essaies maximum
+already_use_letter = [] # liste qui contienr les lettres utilisées
 
-nbre_coups_max = 2  # Nombre de coups max et en cours de jeu
-nbre_coups = 0
-liste_mot_bis = [] #Liste du mot caché au file du jeu
-stock = []
-stockSTR = ""
-NumberLettre = 0
-Lettre_bonne = False
+liste_mots = [ # liste des mots
+    "poisson",
+    "bateau",
+    "baton",
+    "canard",
+    "poubelle",
+    "chocolat",
+    "arbre",
+    "voiture",
+    "spatule",
+    "bonbon",
+    "tarte",
+    "café",
+    "herbe",
+    "plante",
+    "train",
+    "poisson",
+    "parent",
+    "tartine"
+]
+def pendu(liste,alrady_use,nbr_try):
+    mot_mystere = [lettre for lettre in liste_mots[random.randint(0,len(liste_mots)-1)]] # on pique un mot au hazard et on décompose le mot
 
-"""Création du mot_bis sous forme '------' """
-mot_bis = ""       
-for lettre in mot:
-    mot_bis = mot_bis + "-"
-for lettre_num in range(len(mot_bis)):
-    liste_mot_bis.append(mot_bis[lettre_num])
-print(mot_bis)
+    mot_list = ["-" for nbr in range(len(mot_mystere))] # on présente le mot sans montrer quelles sont les lettres
+    mot = "".join(mot_list)
+    print("Mot à deviner :\n",mot) # on écrit le mot à deviner
+    while nbr_try > 0: # répétition des actions jusqu'à var nombre try < 0
+        lettre = str(input("Quel lettre voulez vous choisir ?\nLettres déjà utilisées : " + ", ".join(already_use_letter) + "\n"))
+        if lettre in mot_mystere: # si la lettre est dans le mot alors on lance la recherche
+            for num in range(len(mot_mystere)): # on relève le numéro des éléments de la liste 
+                if mot_mystere[num] == lettre: # si la lettre du numéro de la liste est la meme que la lettre on remplace "-" par la lettre
+                    mot_list[num] = lettre # on remplace le '-' de l'emplacement de la lettre par la lettre
+        if "".join(mot_list) == "".join(mot_mystere): # si les deux mots sont identiques alors c'est gagné
+            clear() # on efface tout
+            print("Vous avez gagné le mot était bien {0}!".format("".join(mot_mystere))) # on remplace {} par le mot à deviner
+            break # on stop le programme
+        if lettre not in mot_list:
+            nbr_try -= 1 # si la lettre n'est pas dans le mot alors on enlève 1 essai
+            if nbr_try == 0: # si le nombre d'essaie est = 0 alors le joueur a perdu
+                clear() # on efface tout
+                print("Vous avez perdu le mot était {0}!".format("".join(mot_mystere)))
+                break # on stop le programme
+        mot = "".join(mot_list)
+        if lettre not in already_use_letter: # si la lettre a déjà étée entrée on ne la rajoute pas dans la liste des lettres utilisées
+            already_use_letter.append(lettre)
+        clear()
+        print(mot," Try restant :",nbr_try)
     
-"""Ajoute la lettre si la lettre saisie est dans le mot"""
-def Mot_encours(lettre):
-    global NumberLettre
-    global mot_bis
-    liste_mot_bis[NumberLettre] = lettre
-    mot_bis = "".join(liste_mot_bis)
-           
-"""Saisie d'une lettre par l'utilisateur"""
-def Saisie_lettre():
-    lettre=str(input("Saisissez une lettre : "))
-    return lettre 
+pendu(liste_mots,already_use_letter,nbr_try)
 
-"""Stock les lettres déja jouées"""
-def deja_joue(lettre):
-    global stock
-    global stockSTR
-    stock.extend([lettre,"-"])
-    stockSTR = "".join(stock)
-    return stockSTR
-  
-"""Teste si la lettre demandÃ©e est dans le mot"""  
-def lettre_mot(lettre):
-    for i in range(len(mot)):
-        if lettre == mot[i]:
-            global NumberLettre
-            global Lettre_bonne
-            global stock
-            NumberLettre = i
-            Mot_encours(lettre)
-            print(mot_bis)
-            if lettre in stockSTR:
-                print("Vous avez déjà joué cette lettre !\n","Lettres déjà jouées :",stockSTR)
-            else:
-                print("Les lettre déjà jouées:", deja_joue(lettre))
-            Lettre_bonne = True
-            return True
-    Lettre_bonne = False
-    print(mot_bis)
-    if lettre in stockSTR:
-        print("Vous avez déjà joué cette lettre !\n","Lettres déjà jouées :",stockSTR)
-    else:
-        print("Les lettre déjà jouées:", deja_joue(lettre))
-    return False
-
-"""Boucle prncipale qui permet d'arreter le programe dans le cas ou le nombre de coups max est dépassé"""
-while nbre_coups < nbre_coups_max :
-    print(lettre_mot(Saisie_lettre()))
-    if Lettre_bonne == False:
-        nbre_coups += 1
-    if mot_bis == mot:
-        print("Vous avez Gagné !!")
-        break
-if nbre_coups_max == nbre_coups:
-    print("\n"+str("You lost"))
-
-    """Ajouter un try expect pour les lettres déjà jouées et modifier le mot fixe d'entrer en input"""
